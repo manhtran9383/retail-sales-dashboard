@@ -130,12 +130,17 @@ retail-sales-dashboard/
 ## 6 · Release & packaging
 
 View the release/tag at:
-`https://github.com/<owner>/retail-sales-dashboard/releases`
+`https://github.com/manhtran9383/retail-sales-dashboard/releases/tag/2026.10.23-v1.0.0`
 
 Package the full portfolio (source + outputs + data):
 ```bat
 python powerbi_build.py
 ```
 (The `powerbi_build.py` script regenerates the Power BI data pack and the preview HTML.)
+
+The ZIP delivery artifact is at:
+
+`retail-sales-dashboard-portfolio.zip`
+
 The zip includes source, figures, the Excel workbook, the Power BI data pack and
 the preview HTML.
