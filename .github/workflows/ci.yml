@@ -1,0 +1,50 @@
+name: Retail Sales Dashboard CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Verify (${{ matrix.dataset }})
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        dataset: [retail]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+
+      - name: Run pipeline (verify)
+        run: |
+          python -m src.run_retail_analysis --dataset ${{ matrix.dataset }}
+
+      - name: Run pytest
+        run: |
+          python -m pytest tests -q --cov=src --cov-report=term-missing
+
+      - name: Run preview stage
+        run: |
+          python -m src.run_retail_analysis --dataset ${{ matrix.dataset }} --stage preview
+
+      - name: Upload pipeline outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retail-outputs
+          path: |
+            reports/figures/
+            reports/Re_Sales_Analysis.xlsx
+            powerbi/data/retail/
+            dashboard_preview.html
