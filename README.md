@@ -180,9 +180,32 @@ tag only moves after CI is green.
   stray backtick, and no longer lists `dashboard_preview.html` as a pack file.
 - Versioning convention: the next breaking change is v2.0.
 
-Build the delivery ZIP locally (the release itself carries no asset):
+---
 
-```bat
-python _pack_retail.py
-```
-This rebuilds the pipeline outputs and zips the repo for delivery.
+## v1.0.4 — v4 review fixes (permanent worklog)
+
+P0 — claims corrected to match the code:
+
+- **Power Query M (`01_power_query.m`):** all four data blocks now chain
+  `Csv.Document → PromoteHeaders → TransformColumnTypes`. The dead
+  `PromoteHeaders` + `RenameColumns` bindings are removed; header promotion is
+  actually wired into the pipeline.
+- **powerbi/README.md:** `dim_product.csv` columns documented as
+  `(StockCode, ProductName, total_revenue, total_qty)`.
+- **ZIP delivery:** the release carries no asset; `README.md` instructs `python
+  _pack_retail.py` locally to build the delivery ZIP.
+
+P1 — hygiene, testing and coverage:
+
+- **Golden tests:** de-duplicated `EXPECTED` between `test_report.py` and
+  `test_retail_kpis.py`; removed unused `_pack_df()`; switched to a normal
+  `from src import report as rpt` import.
+- **Smoke coverage:** added `TestSmokeArtifacts` (6 embedded PNG figures + the
+  `run(., stage=.)` pipeline path), lifting coverage from 60% to **97%**
+  (dashboard_preview.py, run_retail_analysis.py, impact.py, survival.py all at 100%).
+- **Hygiene:** `load_data.py` docstring corrected; `survival.py` docstring fixed
+  ("first" + "joinloss" removal); KPI "Months covered" deduplicated; CI
+  artifact uploads renamed `retail-dashboard-outputs-verify` &
+  `retail-dashboard-outputs-preview` and dropped `.pytest_cache` from the
+  artifact path; removed the unused `load()` wrapper from `analysis`, `impact`
+  and `survival`.

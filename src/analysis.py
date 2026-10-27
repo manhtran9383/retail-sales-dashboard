@@ -4,10 +4,6 @@ from __future__ import annotations
 import pandas as pd
 
 
-def load(df_raw: pd.DataFrame) -> pd.DataFrame:
-    return df_raw.copy()
-
-
 def monthly_revenue(df: pd.DataFrame) -> pd.DataFrame:
     """Monthly revenue trend."""
     tmp = df.copy()

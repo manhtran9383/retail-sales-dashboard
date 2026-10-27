@@ -4,10 +4,6 @@ from __future__ import annotations
 import pandas as pd
 
 
-def load(df_raw: pd.DataFrame) -> pd.DataFrame:
-    return df_raw.copy()
-
-
 def trending_revenue(df: pd.DataFrame, n: int = 20) -> pd.DataFrame:
     """Top-N products by revenue."""
     top = df.groupby("StockCode")["Revenue"].sum().sort_values(ascending=False).head(n)

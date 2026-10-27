@@ -17,3 +17,7 @@ Thumbs.db
 _dist/
 retail-sales-dashboard-portfolio.zip
 .coverage
+
+# Generated portfolio artifacts
+dashboard_preview.html
+reports/Re_Sales_Analysis.xlsx

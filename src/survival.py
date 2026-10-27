@@ -4,10 +4,6 @@ from __future__ import annotations
 import pandas as pd
 
 
-def load(df_raw: pd.DataFrame) -> pd.DataFrame:
-    return df_raw.copy()
-
-
 def retention_curve(df: pd.DataFrame, repeat_days: int = 30) -> tuple[pd.DataFrame, float]:
     """Repeat-purchase retention (honest, all customers).
 

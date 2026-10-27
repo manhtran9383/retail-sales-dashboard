@@ -5,12 +5,16 @@ overall test coverage above the 40% gate required by CI.
 """
 from __future__ import annotations
 
+import pathlib
+
 import pandas as pd
 import pytest
 
 from src import report as rpt
 from src.clean import clean
 from src.load_data import load_data
+
+REPO = pathlib.Path(__file__).resolve().parent.parent
 
 # Independently computed from data/raw/retail_sales.csv (12 000 rows).
 EXPECTED = {
@@ -110,3 +114,25 @@ def test_make_powerbi_pack_creates_csvs(tmp_path):
     prod = pd.read_csv(pack / "dim_product.csv")
     assert "ProductName" in prod.columns
     assert "total_revenue" in prod.columns
+
+class TestSmokeArtifacts:
+    """Smoke tests for the two 0%-covered artifact modules."""
+
+    def test_make_dashboard_preview_writes_html(self, tmp_path):
+        from src.dashboard_preview import make_dashboard_preview
+        from src.load_data import load_data
+
+        df = load_data("retail")
+        out_html = tmp_path / "dashboard_preview.html"
+        make_dashboard_preview(df, out_html)
+        assert out_html.exists()
+        html = out_html.read_text(encoding="utf-8")
+        assert html.count("data:image/png;base64,") == 6
+
+    def test_run_retail_analysis_builds_outputs(self, tmp_path):
+        from src.run_retail_analysis import run
+
+        # Smoke test: run() executes end to end and writes outputs.
+        run("retail", stage="preview")
+        assert (REPO / "reports" / "figures").is_dir()
+        assert (REPO / "reports" / "Re_Sales_Analysis.xlsx").exists()
