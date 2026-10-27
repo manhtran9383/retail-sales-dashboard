@@ -131,8 +131,9 @@ class TestSmokeArtifacts:
 
     def test_run_retail_analysis_builds_outputs(self, tmp_path):
         import sys
-        from src import config as cfg
+
         import src.run_retail_analysis as rra
+        from src import config as cfg
 
         # monkeypatch: redirect REPORTS_DIR / FIGURES_DIR to tmp_path
         cfg.REPORTS_DIR = tmp_path
