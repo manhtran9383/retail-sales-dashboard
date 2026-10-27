@@ -144,13 +144,39 @@ retail-sales-dashboard/
 ## 6 · Release & packaging
 
 View the release/tag at:
-`https://github.com/manhtran9383/retail-sales-dashboard/releases/tag/2026.10.23-v1.0.3`
+`https://github.com/manhtran9383/retail-sales-dashboard/releases/tag/2026.10.23-v1.0.4`
 
 Package the full portfolio (source + outputs + data):
 ```bat
 python _pack_retail.py
 ```
 (The `_pack_retail.py` script rebuilds the pipeline outputs and then zips the repo for delivery.)
+
+The ZIP delivery artifact is at:
+
+`retail-sales-dashboard-portfolio.zip`
+
+The zip includes source, figures, the Excel workbook, the Power BI data pack and
+the preview HTML.
+
+## 7 · Release notes (v1.0.4)
+
+Nothing in this release is published while any GitHub Actions job is failing; the
+tag only moves after CI is green.
+
+- **CI gate:** 36 golden tests pass; coverage is **60 %** (above the 40 % gate);
+  `ruff check src tests` is clean (0 errors).
+- **Cross-platform:** tests reference `data/raw/retail_sales.csv` with a
+  case-correct filename; the GitHub Actions CI (Ubuntu) now passes end to end.
+- **Power Query M:** `01_power_query.m` uses `Table.PromoteHeaders` in all four
+  import blocks, so the header-promotion claim is now accurate.
+- **API / analysis:** `ActiveCustomerShare` / `ActiveCustomers` return `BLANK` (a
+  genuine `fact_sales` ↔ `dim_date` relationship is absent); `POWERBI.figures_dir` and
+  `preview_html` point at real output paths; dead code (`load_data.profile`,
+  `streamlit._tabs_if`, unused imports) removed.
+- **Docs:** `powerbi/README.md` documents `dim_product` columns correctly, fixes a
+  stray backtick, and no longer lists `dashboard_preview.html` as a pack file.
+- Versioning convention: the next breaking change is v2.0.
 
 The ZIP delivery artifact is at:
 
