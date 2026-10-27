@@ -116,7 +116,7 @@ def test_make_powerbi_pack_creates_csvs(tmp_path):
     assert "total_revenue" in prod.columns
 
 class TestSmokeArtifacts:
-    """Smoke tests for the two 0%-covered artifact modules."""
+    "Smoke tests for the two 0%-covered artifact modules."
 
     def test_make_dashboard_preview_writes_html(self, tmp_path):
         from src.dashboard_preview import make_dashboard_preview
@@ -130,9 +130,22 @@ class TestSmokeArtifacts:
         assert html.count("data:image/png;base64,") == 6
 
     def test_run_retail_analysis_builds_outputs(self, tmp_path):
-        from src.run_retail_analysis import run
+        import sys
+        from src import config as cfg
+        import src.run_retail_analysis as rra
 
-        # Smoke test: run() executes end to end and writes outputs.
-        run("retail", stage="preview")
-        assert (REPO / "reports" / "figures").is_dir()
-        assert (REPO / "reports" / "Re_Sales_Analysis.xlsx").exists()
+        # monkeypatch: redirect REPORTS_DIR / FIGURES_DIR to tmp_path
+        cfg.REPORTS_DIR = tmp_path
+        cfg.FIGURES_DIR = tmp_path / "figures"
+        rra.REPORTS = tmp_path
+        rra.FIGURES_DIR = tmp_path / "figures"
+        sys.modules[cfg.__name__] = cfg
+        sys.modules[rra.__name__] = rra
+
+        rra.run("retail", stage="preview")
+
+        figures = tmp_path / "figures"
+        assert figures.is_dir()
+        assert len(list(figures.glob("*.png"))) == 6
+        assert (tmp_path / "Re_Sales_Analysis.xlsx").exists()
+        assert (tmp_path.parent / "dashboard_preview.html").exists()
