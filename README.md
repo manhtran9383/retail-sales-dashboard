@@ -48,11 +48,11 @@ python -m pytest tests -q
 | Customers | 2 836 |
 | Countries | 32 |
 | Total revenue | **£253 814.99** / mo est **£21 151.25** |
-|| Repeat-purchase rate (30-day window) | **42.5%** of 2 836 customers (63.1% of the 1 910 who returned) |
-|| Median customer lifetime | 2 days (mean 94 days) |
-|| Best model | None (no ML model is trained) |
-|| Top product | `22423` — REGENCY CAKESTAND 3 TIER (£4 542.45) |
-|| Top country | United Kingdom (£206 339, 81.3% of revenue) |
+| Repeat-purchase rate (30-day window) | **42.5%** of 2 836 customers (63.1% of the 1 910 who returned) |
+| Median customer lifetime | 2 days (mean 94 days) |
+| Best model | None (no ML model is trained) |
+| Top product | `22423` — REGENCY CAKESTAND 3 TIER (£4 542.45) |
+| Top country | United Kingdom (£206 339, 81.3% of revenue) |
 
 ### Monthly revenue trend (£)
 `2010-12: 20 106 → 2011-12: 8 950` — note **Dec-2011 is truncated** (the sample
@@ -76,9 +76,25 @@ retail-sales-dashboard/
 │   ├── impact.py       # top products + retention by country
 │   ├── report.py       # figures + Excel + Power BI pack
 │   ├── dashboard_preview.py  # self-contained KPI + figure HTML
-│   ├── powerbi_export.py   # Power BI pack builder
 │   └── run_retail_analysis.py
-
+├── tests/
+│   ├── test_retail_kpis.py
+│   ├── test_clean.py
+│   ├── test_analysis.py
+│   ├── test_powerbi_pack.py
+│   └── test_streamlit_app.py
+├── powerbi/
+│   ├── README.md
+│   ├── 01_power_query.m
+│   ├── 02_data_model.md
+│   ├── 03_dax_measures.md
+│   ├── 04_report_layout.md
+│   └── data/retail/      # generated data pack
+├── .github/workflows/ci.yml
+├── streamlit_app.py
+├── requirements.txt
+└── README.md
+```
 
 ### Data provenance
 
@@ -89,21 +105,6 @@ retail-sales-dashboard/
 | Cleaning rules | drop `Invoice` starting `C`; drop `Quantity <= 0` / `Price <= 0`; `Revenue = Quantity * Price`; add `InvoiceMonth` + `month_name` |
 | Code license | MIT (`LICENSE`). Reference data: UCI Online Retail II is CC BY 4.0 — cite: Chen, J. D. (2015), "Online Retail II", UCI Machine Learning Repository, https://archive.ics.uci.edu/dataset/352/online+retail+ii |
 
-├── powerbi/
-│   ├── README.md
-│   ├── 01_power_query.m
-│   ├── 02_data_model.md
-│   ├── 03_dax_measures.md
-│   ├── 04_report_layout.md
-│   ├── data/retail/      # generated data pack
-│   └── dashboard_preview.html  # generated preview
-├── tests/
-│   └── test_streamlit_app.py
-├── .github/workflows/ci.yml
-├── streamlit_app.py
-├── requirements.txt
-└── README.md
-```
 
 ---
 
@@ -111,7 +112,7 @@ retail-sales-dashboard/
 
 * **Monthly revenue** — 13 months of history; seasonality peaks in Q4 (Nov).
   Dec-2011 is truncated (data ends 09/12), so it is **not** a true decline.
-* **Top products** — the top 10 drive £28 173 of £254k (11.1% of revenue).
+* **Top products** — the top 10 drive £28 118,91 (11.1% of revenue).
 * **Customer retention** — repeat-purchase rate is `42.5%` of all customers
   within 30 days (63.1% of the 1 910 who returned). One-off customers are
   censored in the denominator, so the rate is not inflated by survivorship.
@@ -143,7 +144,7 @@ retail-sales-dashboard/
 ## 6 · Release & packaging
 
 View the release/tag at:
-`https://github.com/manhtran9383/retail-sales-dashboard/releases/tag/2026.10.23-v1.0.0`
+`https://github.com/manhtran9383/retail-sales-dashboard/releases/tag/2026.10.23-v1.0.2`
 
 Package the full portfolio (source + outputs + data):
 ```bat

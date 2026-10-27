@@ -14,7 +14,7 @@ DATASETS = {
         "key": "retail",
         "display_name": "Online Retail II — UK Giftwear",
         "short": "Retail",
-        "raw_path": "data/raw/REtail_Sales.csv",
+        "raw_path": "data/raw/retail_sales.csv",
         "time_unit": "days",          # each row is a transaction on a date
         "time_col": "InvoiceDate",
         "customer_col": "Customer ID",
@@ -63,23 +63,13 @@ IMPACT = {
     },
 }
 
-# ---- Model (best model for ranking) ----
-MODEL = {
-    "features": ["Quantity", "Price"],  # product-level regressors
-    "model": "gradient_boosting",       # GB > RF > LR for sales magnitude
-    "target": "Revenue",                # regression target (top sellers)
-    "test_size": 0.25,                  # hold-out for honest impact
-    "random_state": 42,
-}
-
 # ---- Power BI ----
 POWERBI = {
     "data_dir": "powerbi/data/retail",
     "figures_dir": "powerbi/data/retail/figures",
     "preview_html": "powerbi/dashboard_preview_retail.html",
     "csv_files": [
-        "dim_customer.csv", "dim_country.csv", "dim_date.csv",
-        "dim_product.csv", "fact_sales.csv",
+        "dim_country.csv", "dim_date.csv", "dim_product.csv", "fact_sales.csv",
         "kpi_monthly_revenue.csv", "kpi_top_products.csv",
         "kpi_survival.csv", "kpi_targeting_lift.csv",
     ],

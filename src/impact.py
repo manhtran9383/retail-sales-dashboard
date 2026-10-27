@@ -18,7 +18,11 @@ def trending_revenue(df: pd.DataFrame, n: int = 20) -> pd.DataFrame:
 
 
 def retention_table(df: pd.DataFrame, repeat_days: int = 30) -> pd.DataFrame:
-    """Repeat-rate by country (retention market mix)."""
+    """Span >= N days between first and last purchase, by country.
+
+    NOTE: this is a *span* definition (first -> last >= N days), NOT the
+    repeat-purchase-within-N-days rate in survival.py (42,5%). Do not mix.
+    """
     tmp = df.copy()
     tmp["days_since_first"] = (
         tmp.groupby("Customer ID")["InvoiceDate"].transform("max")
@@ -27,7 +31,7 @@ def retention_table(df: pd.DataFrame, repeat_days: int = 30) -> pd.DataFrame:
     tmp["repeat"] = tmp["days_since_first"] >= repeat_days
     out = (
         tmp.groupby("Country")["repeat"].mean().reset_index()
-        .rename(columns={"repeat": "repeat_purchase_rate"})
+        .rename(columns={"repeat": "span_ge_30d_rate"})
     )
-    out["repeat_purchase_rate"] = (out["repeat_purchase_rate"] * 100).round(1)
-    return out.sort_values("repeat_purchase_rate", ascending=False).reset_index(drop=True)
+    out["span_ge_30d_rate"] = (out["span_ge_30d_rate"] * 100).round(1)
+    return out.sort_values("span_ge_30d_rate", ascending=False).reset_index(drop=True)

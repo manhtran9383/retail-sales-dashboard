@@ -56,12 +56,6 @@ def run(dataset: str = "retail", stage: str | None = None) -> None:
         make_preview(df, cfg.REPORTS_DIR.parent / "dashboard_preview.html")
         print("Preview    : dashboard_preview.html (6 figs + KPI tables)")
 
-    # ---- summary numbers ----
-    monthly = pd.read_csv(REPORTS / "Monthly_Revenue.csv") if (REPORTS/"Monthly_Revenue.csv").exists() else None
-    if monthly is not None:
-        m = monthly.sort_values("InvoiceDate")
-        print(f"Best model : gradient boosting (revenue magnitude, hold-out 25%)")
-        print(f"Honest lift (test set): top-3 precision {m['Revenue'].head(3).sum()/m['Revenue'].sum()*100:.1f}%")
     print(f"Outputs    : {FIGURES_DIR} | {REPORTS / 'Re_Sales_Analysis.xlsx'}")
 
 

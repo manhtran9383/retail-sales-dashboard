@@ -1,8 +1,10 @@
 // Power Query (Power BI Desktop)
-// Load the retail dataset and the sibling dimensional tables.
-// Place the repo root at powerbi/data/retail/ before running.
+// Reference only — not executed/tested on Power BI Desktop here.
+// Place powerbi/data/retail/ contents at the Power BI Desktop working
+// directory (i.e. the folder containing this script) before running.
+
 let
-    Source = Folder.Files("data/retail"),
+    Source = Folder.Files("powerbi/data/retail"),
 
     // ----- fact -----
     // fact_sales.csv: Invoice, StockCode, Customer ID, InvoiceDate, Quantity, Price, Revenue
@@ -55,7 +57,7 @@ let
         Table.SelectRows(Source, each [Name] = "dim_date.csv")[Content]{0},
         [Delimiter=",", Columns=2, Encoding=65001]
     ),
-    #"Date renames" = Table.RenameColumns(dateRaw, {"Column1","Month"}, {"Column2","Revenue"}),
+    #"Date renames" = Table.RenameColumns(dateRaw, {{"Column1","Month"},{ "Column2","Revenue"}}),
     #"Date typed" = Table.TransformColumnTypes(#"Date renames", {
         {"Month", type date}, {"Revenue", type number}
     }),

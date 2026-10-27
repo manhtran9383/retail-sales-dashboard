@@ -14,7 +14,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
 import pandas as pd
@@ -23,6 +23,7 @@ import streamlit as st
 from src import config as cfg
 from src import impact as im
 from src import survival as surv_mod
+from src.clean import clean
 from src.load_data import load_data
 
 st.set_page_config(page_title="Retail Sales Dashboard", layout="wide", page_icon="📊")
@@ -71,15 +72,7 @@ DATASET_KEY = st.sidebar.selectbox("Dataset", list(cfg.DATASETS.keys()),
                                    format_func=lambda k: cfg.DATASETS[k]["display_name"])
 
 # ---- load ----
-df_raw = load_data(DATASET_KEY)
-df = df_raw.copy()
-df = df[df["Customer ID"].notna()].copy()
-df["Customer ID"] = df["Customer ID"].astype(int)
-df["Invoice"] = df["Invoice"].astype(str)
-df = df[~df["Invoice"].str.startswith("C")]
-df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
-df["Revenue"] = (df["Quantity"] * df["Price"]).round(2)
-
+df = clean(load_data(DATASET_KEY))
 tabs = st.tabs(["Overview", "Sales Trend", "Customer Retention", "Top Products", "Targeting"])
 
 

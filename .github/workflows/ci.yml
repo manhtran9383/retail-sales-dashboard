@@ -12,7 +12,7 @@ on:
 jobs:
   verify:
     name: Verify pipeline (${{ matrix.dataset }})
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -34,6 +34,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+          pip install ruff
 
       - name: Run pipeline (module mode)
         env:
@@ -41,11 +42,14 @@ jobs:
         run: python -m src.run_retail_analysis --dataset ${{ matrix.dataset }}
 
       - name: Run pytest
-        run: python -m pytest tests -q --cov=src --cov-report=term-missing
+        run: python -m pytest tests -q --cov=src --cov-report=term-missing --cov-fail-under=40
+
+      - name: Lint with ruff
+        run: ruff check src tests
 
   preview:
     name: Preview + Power BI pack (${{ matrix.dataset }})
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -57,11 +61,14 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+          pip install ruff
 
       - name: Build Power BI data pack
         env:
@@ -74,29 +81,18 @@ jobs:
         run: python -m src.run_retail_analysis --dataset ${{ matrix.dataset }} --stage preview
 
       - name: Assert preview has 6 embedded figures
-        shell: pwsh
         run: |
-          $html = Get-Content -Raw dashboard_preview.html
-          $n = ([regex]::Matches($html, 'data:image/png;base64')).Count
-          Write-Host "embedded PNG figures: $n"
-          if ($n -lt 6) { Write-Error "preview has only $n embedded figures (expected >= 6)"; exit 1 }
+          n=$(grep -o 'data:image/png;base64' dashboard_preview.html | wc -l)
+          echo "embedded PNG figures: $n"
+          if [ "$n" -lt 6 ]; then echo "preview has only $n embedded figures (expected >= 6)"; exit 1; fi
 
       - name: Assert Power BI pack present
-        shell: pwsh
         run: |
-          $pack = "powerbi/data/${{ matrix.dataset }}"
-          foreach ($f in @('dim_product.csv','dim_country.csv','dim_date.csv','fact_sales.csv','kpi_monthly_revenue.csv','kpi_top_products.csv','kpi_survival.csv','kpi_targeting_lift.csv')) {
-            if (-not (Test-Path "$pack/$f")) { Write-Error "missing $pack/$f"; exit 1 }
-          }
-          Write-Host "powerbi pack OK"
+          pack="powerbi/data/retail"
+          for f in dim_product.csv dim_country.csv dim_date.csv fact_sales.csv kpi_monthly_revenue.csv kpi_top_products.csv kpi_survival.csv kpi_targeting_lift.csv; do
+            if [ ! -f "$pack/$f" ]; then echo "missing $pack/$f"; exit 1; fi
+          done
+          echo "powerbi pack OK"
 
-      - name: Upload pipeline outputs
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: retail-outputs-${{ github.run_id }}
-          path: |
-            reports/figures/
-            reports/Re_Sales_Analysis.xlsx
-            powerbi/data/retail/
-            dashboard_preview.html
+      - name: Lint with ruff
+        run: ruff check src tests

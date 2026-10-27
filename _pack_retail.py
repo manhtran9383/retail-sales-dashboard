@@ -50,7 +50,7 @@ def build_zip() -> Path:
     DIST.mkdir(parents=True, exist_ok=True)
 
     # Top-level folders the user will see when unzipped
-    root_items = ["src", "streamlit_app.py", "requirements.txt", "README.md", "reports", "powerbi", "data", "tests", ".github"]
+    root_items = ["src", "streamlit_app.py", "requirements.txt", "README.md", "reports", "powerbi", "data", "tests", ".github", "dashboard_preview.html", "LICENSE"]
     for name in root_items:
         _copy_tree(ROOT / name, DIST / name)
 
