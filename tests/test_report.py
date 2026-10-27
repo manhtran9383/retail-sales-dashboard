@@ -5,8 +5,6 @@ overall test coverage above the 40% gate required by CI.
 """
 from __future__ import annotations
 
-from pathlib import Path
-
 import pandas as pd
 import pytest
 
