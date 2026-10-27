@@ -7,9 +7,9 @@ import pandas as pd
 def retention_curve(df: pd.DataFrame, repeat_days: int = 30) -> tuple[pd.DataFrame, float]:
     """Repeat-purchase retention (honest, all customers).
 
-    A customer is "retained" at k days if they made a *first* purchase at least
-    k days after their first. Customers with only one purchase are censored
-    (they never repeat) and sit in the denominator, so the rate is reported over
+    A customer is "retained" at k days if they made a *second* purchase at least
+    k days after their *first*. Customers with only one purchase are censored
+        (they never repeat) and sit in the denominator, so the rate is reported over
     the full customer base (2 836) rather than only repeat buyers (1 910).
     This avoids the survivorship bias of reporting only among repeat buyers.
     """

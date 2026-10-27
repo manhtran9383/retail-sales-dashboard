@@ -166,7 +166,7 @@ workbook, the Power BI data pack and the preview HTML.
 Nothing in this release is published while any GitHub Actions job is failing; the
 tag only moves after CI is green.
 
-- **CI gate:** 36 golden tests pass; coverage is **60 %** (above the 40 % gate);
+- **CI gate:** 38 golden tests pass; coverage is **97 %** (above the 40 % gate);
   `ruff check src tests` is clean (0 errors).
 - **Cross-platform:** tests reference `data/raw/retail_sales.csv` with a
   case-correct filename; the GitHub Actions CI (Ubuntu) now passes end to end.
@@ -197,12 +197,13 @@ P0 — claims corrected to match the code:
 
 P1 — hygiene, testing and coverage:
 
-- **Golden tests:** de-duplicated `EXPECTED` between `test_report.py` and
-  `test_retail_kpis.py`; removed unused `_pack_df()`; switched to a normal
-  `from src import report as rpt` import.
+- **Golden tests:** `EXPECTED` + `test_goldens_match` remain separate copies in
+  `test_report.py` and `test_retail_kpis.py` (deduplication not yet done).
 - **Smoke coverage:** added `TestSmokeArtifacts` (6 embedded PNG figures + the
   `run(., stage=.)` pipeline path), lifting coverage from 60% to **97%**
-  (dashboard_preview.py, run_retail_analysis.py, impact.py, survival.py all at 100%).
+  (dashboard_preview.py, impact.py, survival.py, report.py, clean.py all at 100%;
+  `run_retail_analysis.py` 83% — 7/42 statements missed in the `--stage powerbi`
+  branch and print block).
 - **Hygiene:** `load_data.py` docstring corrected; `survival.py` docstring fixed
   ("first" + "joinloss" removal); KPI "Months covered" deduplicated; CI
   artifact uploads renamed `retail-dashboard-outputs-verify` &
