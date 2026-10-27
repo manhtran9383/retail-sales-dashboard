@@ -48,15 +48,16 @@ python -m pytest tests -q
 | Customers | 2 836 |
 | Countries | 32 |
 | Total revenue | **£253 814.99** / mo est **£21 151.25** |
-| Repeat-purchase rate (30-day window) | **63.1%** |
-| Median customer lifetime | ~12 active days |
-| Best model | gradient boosting (revenue magnitude, hold-out 25%) |
-| Top product | `85123A` — WHITE HANGING HEART T-LIGHT HOLDER (£10 857) |
-| Top country | United Kingdom (£251 954) |
+|| Repeat-purchase rate (30-day window) | **42.5%** of 2 836 customers (63.1% of the 1 910 who returned) |
+|| Median customer lifetime | 2 days (mean 94 days) |
+|| Best model | None (no ML model is trained) |
+|| Top product | `22423` — REGENCY CAKESTAND 3 TIER (£4 542.45) |
+|| Top country | United Kingdom (£206 339, 81.3% of revenue) |
 
 ### Monthly revenue trend (£)
-`2010-12: 20 105 → 2011-12: 8 950` (decline driven by fewer December orders)
-Peak month `2011-11 (£33 297)`; trough `2010-12 (£20 105)`.
+`2010-12: 20 106 → 2011-12: 8 950` — note **Dec-2011 is truncated** (the sample
+ends 09/12/2011, 9 days), so the dip is a sampling artefact, not a true decline.
+Peak month `2011-11 (£33 297)`; trough `2010-12 (£20 106)`.
 
 ---
 
@@ -77,6 +78,17 @@ retail-sales-dashboard/
 │   ├── dashboard_preview.py  # self-contained KPI + figure HTML
 │   ├── powerbi_export.py   # Power BI pack builder
 │   └── run_retail_analysis.py
+
+
+### Data provenance
+
+| Field | Value |
+|---|---|
+| Source | UCI Online Retail II (`online_retail_II.xlsx`, sheet `Year 2010-2011`) |
+| Processed frame | `data/raw/REtail_Sales.csv` — 12 000 sampled transactions (pre-cleaned) |
+| Cleaning rules | drop `Invoice` starting `C`; drop `Quantity <= 0` / `Price <= 0`; `Revenue = Quantity * Price`; add `InvoiceMonth` + `month_name` |
+| Code license | MIT (`LICENSE`). Reference data: UCI Online Retail II is CC BY 4.0 — cite: Chen, J. D. (2015), "Online Retail II", UCI Machine Learning Repository, https://archive.ics.uci.edu/dataset/352/online+retail+ii |
+
 ├── powerbi/
 │   ├── README.md
 │   ├── 01_power_query.m
@@ -97,12 +109,13 @@ retail-sales-dashboard/
 
 ## 3 · Analysis highlights
 
-* **Monthly revenue** — 13 months of history; seasonality peaks in Q4 (Nov–Dec)
-  and dips in June/July.
-* **Top products** — the top 10 drive ~£52k of £254k (20% of revenue).
-* **Customer retention** — repeat-purchase rate is `63.1%` within 30 days;
-  the Kaplan-Meier curve shows declining reactivation the longer the window.
-* **Regional mix** — 33 countries; `United Kingdom 99.2%` of revenue.
+* **Monthly revenue** — 13 months of history; seasonality peaks in Q4 (Nov).
+  Dec-2011 is truncated (data ends 09/12), so it is **not** a true decline.
+* **Top products** — the top 10 drive £28 173 of £254k (11.1% of revenue).
+* **Customer retention** — repeat-purchase rate is `42.5%` of all customers
+  within 30 days (63.1% of the 1 910 who returned). One-off customers are
+  censored in the denominator, so the rate is not inflated by survivorship.
+* **Regional mix** — 32 countries; United Kingdom is `81.3%` of revenue.
 
 ---
 
@@ -134,9 +147,9 @@ View the release/tag at:
 
 Package the full portfolio (source + outputs + data):
 ```bat
-python powerbi_build.py
+python _pack_retail.py
 ```
-(The `powerbi_build.py` script regenerates the Power BI data pack and the preview HTML.)
+(The `_pack_retail.py` script rebuilds the pipeline outputs and then zips the repo for delivery.)
 
 The ZIP delivery artifact is at:
 

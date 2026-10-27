@@ -33,7 +33,7 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
         "InvoiceMonth", "InvoiceYearMonth",
     ]
     df = df[cols].copy()
-    df = df.sort_values("InvoiceDate").reset_index(drop=True)
+    df = df.sort_values("InvoiceDate", kind="mergesort").reset_index(drop=True)
     return df
 
 

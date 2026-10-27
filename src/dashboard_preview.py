@@ -117,7 +117,7 @@ def _season_chart(df):
     order = ["January", "February", "March", "April", "May", "June",
              "July", "August", "September", "October", "November", "December"]
     tmp["month_name"] = pd.Categorical(tmp["month_name"], categories=order, ordered=True)
-    d = tmp.groupby("month_name")["Revenue"].mean().reindex(order)
+    d = tmp.groupby("month_name", observed=False)["Revenue"].mean().reindex(order)
     fig, ax = plt.subplots(figsize=FIGSIZE)
     ax.bar(d.index, d.values, color=COLORS["retail"])
     ax.set_ylabel("Avg revenue (£)")

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -21,12 +22,9 @@ ZIP_NAME = "retail-sales-dashboard-portfolio"
 
 def build_outputs() -> None:
     """Regenerate every artifact the portfolio ships (figures, xlsx, powerbi pack, preview)."""
-    import subprocess
-    import sys
-
     print(">>> Running pipeline (stage powerbi + preview)...")
     subprocess.run(
-        [sys.executable, "-m", "src.run_retail_analysis", "--dataset", "retail", "--stage", "powerbi", "--stage", "preview"],
+        [sys.executable, "-m", "src.run_retail_analysis", "--dataset", "retail"],
         cwd=ROOT,
         check=True,
     )

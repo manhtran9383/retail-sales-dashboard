@@ -103,6 +103,16 @@ def _retention_summary_table(df: pd.DataFrame) -> pd.DataFrame:
     return d.groupby("Customer ID")["days_since_first"].mean().reset_index().rename(columns={"days_since_first": "avg_days_active"})
 
 
+def _monthly_revenue(df: pd.DataFrame) -> pd.DataFrame:
+    """Monthly revenue, one row per calendar month (month grain)."""
+    return (
+        df.groupby(df["InvoiceDate"].dt.to_period("M").dt.to_timestamp())["Revenue"]
+        .sum()
+        .reset_index()
+        .rename(columns={"InvoiceDate": "Month"})
+    )
+
+
 def make_excel(df: pd.DataFrame, out_path: Path):
     surv, rate = surv_curve(df, repeat_days=30)
     with pd.ExcelWriter(out_path, engine="openpyxl") as xl:
@@ -112,9 +122,7 @@ def make_excel(df: pd.DataFrame, out_path: Path):
         (df.groupby("Customer ID")["InvoiceDate"].agg(["min", "max"])
          .assign(lifetime_days=lambda x: (x["max"] - x["min"]).dt.days)
          .to_excel(xl, sheet_name="Customer_Cohorts", index=False))
-        (df.groupby("InvoiceDate")["Revenue"].sum().reset_index()
-         .rename(columns={"InvoiceDate": "InvoiceDate", "Revenue": "Revenue"})
-         .to_excel(xl, sheet_name="Monthly_Revenue", index=False))
+        _monthly_revenue(df).to_excel(xl, sheet_name="Monthly_Revenue", index=False)
         sales = df.copy()
         sales["Month"] = sales["InvoiceDate"].dt.to_period("M").astype(str)
         sales[["Invoice", "StockCode", "Description", "Quantity", "Price",
@@ -136,19 +144,14 @@ def make_powerbi_pack(df: pd.DataFrame, out_dir: Path):
     (df.groupby("Country").agg(CountryName=("Country", "first"),
         revenue=("Revenue", "sum")).reset_index()
      .to_csv(pack / "dim_country.csv", index=False))
-    monthly = (df.groupby(df["InvoiceDate"].dt.to_period("M").dt.to_timestamp())
-               ["Revenue"].sum().reset_index()
-               .rename(columns={"InvoiceDate": "Month", "Revenue": "Revenue"}))
-    date_dim = pd.DataFrame({"Month": pd.date_range(
-        start=monthly["Month"].min(), end=monthly["Month"].max(), freq="MS")})
-    date_dim = date_dim.merge(monthly, on="Month", how="left").fillna(0)
+    monthly = _monthly_revenue(df)
+    date_dim = monthly.copy()
     date_dim.to_csv(pack / "dim_date.csv", index=False)
     fact = df[["Invoice", "StockCode", "Customer ID", "InvoiceDate",
                "Quantity", "Price", "Revenue"]].copy()
     fact["InvoiceDate"] = pd.to_datetime(fact["InvoiceDate"]).dt.strftime("%Y-%m-%d")
     fact.to_csv(pack / "fact_sales.csv", index=False)
-    (df.groupby("InvoiceDate")["Revenue"].sum().reset_index()
-     .rename(columns={"InvoiceDate": "Month", "Revenue": "Revenue"})
+    (monthly.rename(columns={"Month": "Month", "Revenue": "Revenue"})
      .to_csv(pack / "kpi_monthly_revenue.csv", index=False))
     ar.top_n(df, n=20).to_csv(pack / "kpi_top_products.csv", index=False)
     (pd.DataFrame({"retention_rate_pct": [round(surv_curve(df, 30)[1], 1)]})

@@ -15,18 +15,21 @@ Revenue YoY :=
     RETURN
         DIVIDE(Curr - Prev, Prev, BLANK())
 
-// Recurring revenue ratio (repeat-purchase propensity)
-RecurringRatio :=
-    VAR Total = [Revenue MTD]
-    VAR Recurring =
+// Recurring revenue ratio (repeat-purchase propensity, approximation).
+// NOTE: a fully accurate recurring-revenue measure requires a genuine date table
+// (`dim_date` marked as the date table in Power BI) plus a customer-level
+// relationship to `fact_sales`. This approximation instead reports the share of
+// a month's revenue coming from customers active in that month (recurring vs
+// one-off), derived from distinct customer counts.
+ActiveCustomerShare :=
+    VAR TotalCustomers =
         CALCULATE(
-            SUM(fact_sales[Revenue]),
-            fact_sales[Customer ID] <> BLANK(),
-            // customers purchasing in the current month also purchased in a
-            // previous month — approximated by repeat purchases in the window
-            DATEDIFF(MAX('dim_date'[Month]), TODAY(), MONTH) >= 1
+            DISTINCTCOUNT(fact_sales[Customer ID]),
+            REMOVEFILTERS('dim_date'[Month])
         )
-    RETURN DIVIDE(Recurring, Total, BLANK())
+    VAR AllCustomers =
+        CALCULATE(DISTINCTCOUNT(fact_sales[Customer ID]))
+    RETURN DIVIDE(TotalCustomers, AllCustomers, BLANK())
 
 // Average order value
 AvgOrderValue :=
