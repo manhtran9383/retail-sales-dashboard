@@ -16,3 +16,4 @@ coverage.xml
 Thumbs.db
 _dist/
 retail-sales-dashboard-portfolio.zip
+.coverage
