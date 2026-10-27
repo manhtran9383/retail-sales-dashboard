@@ -69,7 +69,7 @@ retail-sales-dashboard/
 │   └── raw/retail_sales.csv        # clean, sampled sales frame
 ├── src/
 │   ├── config.py       # dataset registry + semantics
-│   ├── load_data.py    # CSV loader + profile
+│   ├── load_data.py    # CSV loader
 │   ├── clean.py        # cleaning: no Anon, no cancel, positive qty/price
 │   ├── analysis.py     # monthly revenue, top products, country, seasonality
 │   ├── survival.py     # Kaplan-Meier-style repeat-purchase retention
@@ -152,12 +152,14 @@ python _pack_retail.py
 ```
 (The `_pack_retail.py` script rebuilds the pipeline outputs and then zips the repo for delivery.)
 
-The ZIP delivery artifact is at:
+Build the delivery ZIP locally (the release itself carries no asset):
 
-`retail-sales-dashboard-portfolio.zip`
-
-The zip includes source, figures, the Excel workbook, the Power BI data pack and
-the preview HTML.
+```bat
+python _pack_retail.py
+```
+This rebuilds the pipeline outputs and zips the repo for delivery. The resulting
+`retail-sales-dashboard-portfolio.zip` includes source, figures, the Excel
+workbook, the Power BI data pack and the preview HTML.
 
 ## 7 · Release notes (v1.0.4)
 
@@ -178,9 +180,9 @@ tag only moves after CI is green.
   stray backtick, and no longer lists `dashboard_preview.html` as a pack file.
 - Versioning convention: the next breaking change is v2.0.
 
-The ZIP delivery artifact is at:
+Build the delivery ZIP locally (the release itself carries no asset):
 
-`retail-sales-dashboard-portfolio.zip`
-
-The zip includes source, figures, the Excel workbook, the Power BI data pack and
-the preview HTML.
+```bat
+python _pack_retail.py
+```
+This rebuilds the pipeline outputs and zips the repo for delivery.

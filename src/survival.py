@@ -11,8 +11,8 @@ def load(df_raw: pd.DataFrame) -> pd.DataFrame:
 def retention_curve(df: pd.DataFrame, repeat_days: int = 30) -> tuple[pd.DataFrame, float]:
     """Repeat-purchase retention (honest, all customers).
 
-    A customer is "retained" at k days if they made a *second* purchase at least
-    k days after their second. Customers with only one purchase are censored
+    A customer is "retained" at k days if they made a *first* purchase at least
+    k days after their first. Customers with only one purchase are censored
     (they never repeat) and sit in the denominator, so the rate is reported over
     the full customer base (2 836) rather than only repeat buyers (1 910).
     This avoids the survivorship bias of reporting only among repeat buyers.
@@ -26,8 +26,7 @@ def retention_curve(df: pd.DataFrame, repeat_days: int = 30) -> tuple[pd.DataFra
     joined["repeat_days"] = (joined["second_purchase"] - joined["first_purchase"]).dt.days
     joined = joined[joined["second_purchase"].notna()].copy()
     # Denominator = FULL customer base. Non-repeaters (one-off) are censored:
-    # they never repeat, so they lower the rate. Surviving-repeat count uses
-    # the repeat-customer subset (joinloss would otherwise corrupt the curve).
+    # they never repeat, so they lower the rate.
     n_customers = df["Customer ID"].nunique()
     sizes = []
     for k in range(1, repeat_days + 1):

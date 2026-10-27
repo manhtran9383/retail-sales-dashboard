@@ -4,7 +4,7 @@
 One-Power-BI data pack scoped to a single dataset (`retail` = online retail II):
 
 - `fact_sales.csv`       — transaction fact (Invoice, StockCode, Customer, date, qty, price, revenue)
-- `dim_product.csv`      — product dimension (StockCode, Description, total revenue)
+- `dim_product.csv`      — product dimension (StockCode, ProductName, total_revenue, total_qty)
 - `dim_country.csv`      — country dimension
 - `dim_date.csv`         — date dimension (month grain, Month as a date)
 - `kpi_monthly_revenue.csv` — monthly revenue

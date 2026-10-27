@@ -39,7 +39,6 @@ def make_dashboard_preview(df: pd.DataFrame, out_html: Path):
         ("Customers", f"{df['Customer ID'].nunique():,}"),
         ("Months (coverage)", f"{monthly.shape[0]}"),
         ("Repeat-purchase rate", f"{rate:.1f}%"),
-        ("Months covered", f"{len(monthly)}"),
     ]
     kpi_rows = ""
     for k, v in kpi:
@@ -84,7 +83,7 @@ tr:last-child td {{ border-bottom:none; }}
   <div class="card"><h2>Seasonality</h2><img src="{_b64(_season_chart(df))}"></div>
   <div class="card"><h2>Retention (KM)</h2><img src="{_b64(_retention_chart(surv, rate))}"></div>
   <div class="card"><h2>Top Products</h2><img src="{_b64(_top_chart(top_p))}"></div>
-  <div class="card"><h2>Price Drivers</h2><img src="{_b64(_predictor_chart(df))}"></div>
+  <div class="card"><h2>Top-10 products</h2><img src="{_b64(_predictor_chart(df))}"></div>
 </div>
 <div class="card" style="margin:12px;"><h2>Monthly Revenue Detail</h2><table><thead><tr><th>Month</th><th>Revenue (£)</th></tr></thead><tbody>{monthly_rows}</tbody></table></div>
 <div class="card" style="margin:12px;"><h2>Top Products</h2><table><thead><tr><th>StockCode</th><th>Revenue (£)</th></tr></thead><tbody>{top_rows}</tbody></table></div>

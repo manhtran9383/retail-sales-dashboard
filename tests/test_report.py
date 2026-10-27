@@ -8,6 +8,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
+from src import report as rpt
 from src.clean import clean
 from src.load_data import load_data
 
@@ -30,10 +31,6 @@ def _df():
     return clean(load_data("retail"))
 
 
-def _pack_df():
-    return _df()
-
-
 def test_figure_outputs_exist(tmp_path):
     df = _df()
     fig_fns = {
@@ -45,8 +42,7 @@ def test_figure_outputs_exist(tmp_path):
         "figure_best_predictors": "Best_predictors.png",
     }
     for name, png in fig_fns.items():
-        fn = getattr(__import__("src.report", fromlist=["report"]), name)
-        fn(df, tmp_path)
+        getattr(rpt, name)(df, tmp_path)
         assert (tmp_path / png).exists()
 
 

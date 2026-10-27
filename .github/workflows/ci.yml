@@ -51,11 +51,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: retail-dashboard-outputs
+          name: retail-dashboard-outputs-verify
           path: |
             reports/
             dashboard_preview.html
-            .pytest_cache/
           retention-days: 5
 
   preview:
@@ -112,9 +111,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: retail-dashboard-outputs
+          name: retail-dashboard-outputs-preview
           path: |
             reports/
             dashboard_preview.html
-            .pytest_cache/
           retention-days: 5

@@ -1,4 +1,4 @@
-"""Retail Sales Dashboard — data loading (clean + profile)."""
+"""Retail Sales Dashboard — data loading (clean read only)."""
 from __future__ import annotations
 
 from pathlib import Path
