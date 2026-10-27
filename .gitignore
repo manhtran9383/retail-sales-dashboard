@@ -21,3 +21,7 @@ retail-sales-dashboard-portfolio.zip
 # Generated portfolio artifacts
 dashboard_preview.html
 reports/Re_Sales_Analysis.xlsx
+
+# Generated figures (committed for showcase; regenerated on each pipeline run,
+# so local runs don't leave modified files in git status)
+reports/figures/

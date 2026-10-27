@@ -89,7 +89,7 @@ with tabs[0]:
         st.metric("Months covered", f"{monthly.shape[0]}")
         first, last = df["InvoiceDate"].min().date(), df["InvoiceDate"].max().date()
         st.metric("Date range", f"{first} → {last}")
-        st.metric("Avg revenue / month", f"£{df['Revenue'].mean():,.2f}")
+        st.metric("Avg revenue / month", f"£{df['Revenue'].sum() / max(monthly.shape[0], 1):,.2f}")
 
 # ---- Sales Trend ----
 with tabs[1]:
