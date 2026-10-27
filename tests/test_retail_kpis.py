@@ -35,7 +35,6 @@ def _compute() -> dict:
     joined = joined[joined["second_purchase"].notna()].copy()
     joined["repeat_days"] = (joined["second_purchase"] - joined["first_purchase"]).dt.days
     top10 = df.groupby("StockCode")["Revenue"].sum().nlargest(10).sum()
-    top_product_rev = df.groupby("StockCode")["Revenue"].sum().idxmax()
     top_product_rev_value = df.groupby("StockCode")["Revenue"].sum().max()
     uk_rev = df.loc[df["Country"] == "United Kingdom", "Revenue"].sum()
     first_purchase = df.groupby("Customer ID")["InvoiceDate"].min()

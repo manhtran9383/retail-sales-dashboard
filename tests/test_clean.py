@@ -1,10 +1,11 @@
 """Unit tests for src/clean — cleaning rules (P2)."""
 from pathlib import Path
+
 import pandas as pd
 
 from src.clean import clean
 
-RAW = Path(__file__).parent.parent / "data" / "raw" / "REtail_Sales.csv"
+RAW = Path(__file__).parent.parent / "data" / "raw" / "retail_sales.csv"
 
 
 def _read_raw():

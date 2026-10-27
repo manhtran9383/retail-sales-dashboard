@@ -2,15 +2,17 @@
 from __future__ import annotations
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import pandas as pd
-from io import BytesIO
 import base64
+from io import BytesIO
 from pathlib import Path
 
-from .config import DATASETS, FIGURES_DIR
+import matplotlib.pyplot as plt
+import pandas as pd
+
 from . import analysis as ar
+from .config import DATASETS
 from .survival import retention_curve
 
 FIGSIZE = (7.2, 3.6)
@@ -48,9 +50,6 @@ def make_dashboard_preview(df: pd.DataFrame, out_html: Path):
     top_rows = "".join(
         f"<tr><td>{r['StockCode']}</td><td style='text-align:right'>£{r['Revenue']:,.2f}</td></tr>"
         for _, r in top_p.head(12).iterrows())
-    country_rows = "".join(
-        f"<tr><td>{c}</td><td style='text-align:right'>£{v:,.2f}</td></tr>"
-        for c, v in country["Revenue"].items())
     surv_rows = "".join(
         f"<tr><td>{d}</td><td style='text-align:right'>{p:.1f}%</td></tr>"
         for d, p in zip(surv["days_after_first"], surv["repeat_rate_pct"]))

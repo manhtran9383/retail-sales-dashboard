@@ -66,8 +66,8 @@ IMPACT = {
 # ---- Power BI ----
 POWERBI = {
     "data_dir": "powerbi/data/retail",
-    "figures_dir": "powerbi/data/retail/figures",
-    "preview_html": "powerbi/dashboard_preview_retail.html",
+    "figures_dir": "reports/figures",
+    "preview_html": "dashboard_preview.html",
     "csv_files": [
         "dim_country.csv", "dim_date.csv", "dim_product.csv", "fact_sales.csv",
         "kpi_monthly_revenue.csv", "kpi_top_products.csv",

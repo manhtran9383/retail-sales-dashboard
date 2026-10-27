@@ -1,10 +1,11 @@
 """Unit tests for report.make_powerbi_pack output schema (P2)."""
 from pathlib import Path
+
 import pandas as pd
 
 from src.report import make_powerbi_pack
 
-RAW = Path(__file__).parent.parent / "data" / "raw" / "REtail_Sales.csv"
+RAW = Path(__file__).parent.parent / "data" / "raw" / "retail_sales.csv"
 
 EXPECTED_FILES = {
     "dim_product.csv": ["StockCode", "ProductName", "total_revenue", "total_qty"],

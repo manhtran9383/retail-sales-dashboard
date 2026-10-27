@@ -39,7 +39,7 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
 
 def check(df: pd.DataFrame) -> dict:
     return {
-        "rows": int(len(df)),
+        "rows": len(df),
         "customers": int(df["Customer ID"].nunique()),
         "countries": int(df["Country"].nunique()),
         "date_min": str(df["InvoiceDate"].min().date()),

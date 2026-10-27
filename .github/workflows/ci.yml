@@ -34,7 +34,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          pip install ruff
+          pip install ruff==0.17.3
 
       - name: Run pipeline (module mode)
         env:
@@ -46,6 +46,17 @@ jobs:
 
       - name: Lint with ruff
         run: ruff check src tests
+
+      - name: Upload pipeline outputs
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: retail-dashboard-outputs
+          path: |
+            reports/
+            dashboard_preview.html
+            .pytest_cache/
+          retention-days: 5
 
   preview:
     name: Preview + Power BI pack (${{ matrix.dataset }})
@@ -68,7 +79,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          pip install ruff
+          pip install ruff==0.17.3
 
       - name: Build Power BI data pack
         env:
@@ -96,3 +107,14 @@ jobs:
 
       - name: Lint with ruff
         run: ruff check src tests
+
+      - name: Upload pipeline outputs
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: retail-dashboard-outputs
+          path: |
+            reports/
+            dashboard_preview.html
+            .pytest_cache/
+          retention-days: 5

@@ -6,12 +6,11 @@ One-Power-BI data pack scoped to a single dataset (`retail` = online retail II):
 - `fact_sales.csv`       — transaction fact (Invoice, StockCode, Customer, date, qty, price, revenue)
 - `dim_product.csv`      — product dimension (StockCode, Description, total revenue)
 - `dim_country.csv`      — country dimension
-`- dim_date.csv`         — date dimension (month grain, Month as a date)
+- `dim_date.csv`         — date dimension (month grain, Month as a date)
 - `kpi_monthly_revenue.csv` — monthly revenue
 - `kpi_top_products.csv`   — top products
 - `kpi_survival.csv`       — repeat-purchase retention rate
 - `kpi_targeting_lift.csv` — revenue concentration (top-50 lift)
-- `dashboard_preview.html` — self-contained KPI + figures preview
 
 ## Build the pack
 ```bat

@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import pandas as pd
 from pathlib import Path
 
-from .config import FIGURES_DIR, REPORTS_DIR, DATASETS
+import matplotlib.pyplot as plt
+import pandas as pd
+
 from . import analysis as ar
 from .survival import retention_curve as surv_curve
 
@@ -65,7 +66,7 @@ def figure_seasonality(df: pd.DataFrame, out_dir: Path):
 
 
 def figure_retention(df: pd.DataFrame, out_dir: Path):
-    surv, rate = surv_curve(df, repeat_days=30)
+    surv, _rate = surv_curve(df, repeat_days=30)
     fig, ax = plt.subplots(figsize=FIGSIZE)
     ax.plot(surv["days_after_first"], surv["repeat_rate_pct"], marker="o", color=COLORS["retail"])
     ax.set_xlabel("Days after first purchase")
@@ -114,7 +115,7 @@ def _monthly_revenue(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def make_excel(df: pd.DataFrame, out_path: Path):
-    surv, rate = surv_curve(df, repeat_days=30)
+    surv, _rate = surv_curve(df, repeat_days=30)
     with pd.ExcelWriter(out_path, engine="openpyxl") as xl:
         ar.top_n(df, n=20).to_excel(xl, sheet_name="Top_Products", index=False)
         _retention_summary_table(df).to_excel(xl, sheet_name="Customer_Retention", index=False)

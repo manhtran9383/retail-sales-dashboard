@@ -1,11 +1,12 @@
 """Unit tests for src/analysis — monthly / top-products / country."""
 from pathlib import Path
+
 import pandas as pd
 import pytest
 
 from src.analysis import monthly_revenue, sales_by_country, top_n
 
-RAW = Path(__file__).parent.parent / "data" / "raw" / "REtail_Sales.csv"
+RAW = Path(__file__).parent.parent / "data" / "raw" / "retail_sales.csv"
 
 
 def _read_raw():

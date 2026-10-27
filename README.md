@@ -66,7 +66,7 @@ Peak month `2011-11 (£33 297)`; trough `2010-12 (£20 106)`.
 ```
 retail-sales-dashboard/
 ├── data/
-│   └── raw/REtail_Sales.csv        # clean, sampled sales frame
+│   └── raw/retail_sales.csv        # clean, sampled sales frame
 ├── src/
 │   ├── config.py       # dataset registry + semantics
 │   ├── load_data.py    # CSV loader + profile
@@ -101,7 +101,7 @@ retail-sales-dashboard/
 | Field | Value |
 |---|---|
 | Source | UCI Online Retail II (`online_retail_II.xlsx`, sheet `Year 2010-2011`) |
-| Processed frame | `data/raw/REtail_Sales.csv` — 12 000 sampled transactions (pre-cleaned) |
+| Processed frame | `data/raw/retail_sales.csv` — 12 000 sampled transactions (pre-cleaned) |
 | Cleaning rules | drop `Invoice` starting `C`; drop `Quantity <= 0` / `Price <= 0`; `Revenue = Quantity * Price`; add `InvoiceMonth` + `month_name` |
 | Code license | MIT (`LICENSE`). Reference data: UCI Online Retail II is CC BY 4.0 — cite: Chen, J. D. (2015), "Online Retail II", UCI Machine Learning Repository, https://archive.ics.uci.edu/dataset/352/online+retail+ii |
 
@@ -144,7 +144,7 @@ retail-sales-dashboard/
 ## 6 · Release & packaging
 
 View the release/tag at:
-`https://github.com/manhtran9383/retail-sales-dashboard/releases/tag/2026.10.23-v1.0.2`
+`https://github.com/manhtran9383/retail-sales-dashboard/releases/tag/2026.10.23-v1.0.3`
 
 Package the full portfolio (source + outputs + data):
 ```bat

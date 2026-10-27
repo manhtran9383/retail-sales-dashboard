@@ -3,6 +3,10 @@
 // you prefer; these read the `fact_sales` table directly).
 
 // Monthly revenue
+// NOTE: Revenue MTD/YoY filter fact_sales by dim_date[Month]. The current data
+// model has NO relationship between fact_sales and dim_date (see
+// powerbi/README.md §Relationship), so these measures currently sum the entire
+// fact_sales table for every month. Add the relationship before relying on them.
 Revenue MTD :=
     CALCULATE(
         SUM(fact_sales[Revenue]),
@@ -16,20 +20,16 @@ Revenue YoY :=
         DIVIDE(Curr - Prev, Prev, BLANK())
 
 // Recurring revenue ratio (repeat-purchase propensity, approximation).
-// NOTE: a fully accurate recurring-revenue measure requires a genuine date table
-// (`dim_date` marked as the date table in Power BI) plus a customer-level
-// relationship to `fact_sales`. This approximation instead reports the share of
-// a month's revenue coming from customers active in that month (recurring vs
-// one-off), derived from distinct customer counts.
-ActiveCustomerShare :=
-    VAR TotalCustomers =
-        CALCULATE(
-            DISTINCTCOUNT(fact_sales[Customer ID]),
-            REMOVEFILTERS('dim_date'[Month])
-        )
-    VAR AllCustomers =
-        CALCULATE(DISTINCTCOUNT(fact_sales[Customer ID]))
-    RETURN DIVIDE(TotalCustomers, AllCustomers, BLANK())
+// NOTE: BROKEN in the current data model. This measure requires a genuine
+// one-to-many relationship between `fact_sales[InvoiceDate]` and
+// `dim_date[Month]` (see powerbi/README.md §Relationship). Without that
+// relationship, both variables below resolve to the total customer base, so the
+// ratio is always 100%. Until the relationship exists, remove this measure or
+// re-enable it after adding the relationship.
+//
+// TODO: add fact_sales[InvoiceDate] -> dim_date[Month] relationship in Power BI,
+// then restore ActiveCustomerShare.
+ActiveCustomerShare := BLANK()
 
 // Average order value
 AvgOrderValue :=
@@ -39,8 +39,8 @@ AvgOrderValue :=
     )
 
 // Total active customers
-ActiveCustomers :=
-    CALCULATE(
-        DISTINCTCOUNT(fact_sales[Customer ID]),
-        REMOVEFILTERS('dim_date'[Month])
-    )
+// NOTE: requires a genuine one-to-many relationship between
+// `fact_sales[InvoiceDate]` and `dim_date[Month]` (see powerbi/README.md
+// §Relationship). Without that relationship this resolves to the total customer
+// base. TODO: add the relationship, then restore.
+ActiveCustomers := BLANK()

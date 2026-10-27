@@ -10,15 +10,13 @@ import argparse
 import sys
 from pathlib import Path
 
-import pandas as pd
-
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from . import config as cfg
 from . import report as rpt
+from .clean import check, clean
 from .dashboard_preview import make_dashboard_preview as make_preview
-from .clean import clean, check
 from .load_data import load_data
 
 REPORTS = cfg.REPORTS_DIR

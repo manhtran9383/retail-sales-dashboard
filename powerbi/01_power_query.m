@@ -12,6 +12,7 @@ let
         Table.SelectRows(Source, each [Name] = "fact_sales.csv")[Content]{0},
         [Delimiter=",", Columns=7, Encoding=65001]
     ),
+    #"Promoted fact headers" = Table.PromoteHeaders(factRaw, [PromoteAllScalars=true]),
     #"Fact renames" = Table.RenameColumns(factRaw, {
         {"Column1","Invoice"},{"Column2","StockCode"},{"Column3","Customer ID"},
         {"Column4","InvoiceDate"},{"Column5","Quantity"},{"Column6","Price"},
@@ -29,6 +30,7 @@ let
         Table.SelectRows(Source, each [Name] = "dim_product.csv")[Content]{0},
         [Delimiter=",", Columns=4, Encoding=65001]
     ),
+    #"Promoted product headers" = Table.PromoteHeaders(prodRaw, [PromoteAllScalars=true]),
     #"Product renames" = Table.RenameColumns(prodRaw, {
         {"Column1","StockCode"},{"Column2","ProductName"},
         {"Column3","total_revenue"},{"Column4","total_qty"}
@@ -44,6 +46,7 @@ let
         Table.SelectRows(Source, each [Name] = "dim_country.csv")[Content]{0},
         [Delimiter=",", Columns=3, Encoding=65001]
     ),
+    #"Promoted country headers" = Table.PromoteHeaders(ctryRaw, [PromoteAllScalars=true]),
     #"Country renames" = Table.RenameColumns(ctryRaw, {
         {"Column1","Country"},{"Column2","CountryName"},{"Column3","revenue"}
     }),
@@ -57,6 +60,7 @@ let
         Table.SelectRows(Source, each [Name] = "dim_date.csv")[Content]{0},
         [Delimiter=",", Columns=2, Encoding=65001]
     ),
+    #"Promoted date headers" = Table.PromoteHeaders(dateRaw, [PromoteAllScalars=true]),
     #"Date renames" = Table.RenameColumns(dateRaw, {{"Column1","Month"},{ "Column2","Revenue"}}),
     #"Date typed" = Table.TransformColumnTypes(#"Date renames", {
         {"Month", type date}, {"Revenue", type number}

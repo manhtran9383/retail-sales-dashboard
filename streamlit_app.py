@@ -76,10 +76,6 @@ df = clean(load_data(DATASET_KEY))
 tabs = st.tabs(["Overview", "Sales Trend", "Customer Retention", "Top Products", "Targeting"])
 
 
-def _tabs_if(cond, body):
-    if cond:
-        body()
-
 
 # ---- Overview ----
 with tabs[0]:

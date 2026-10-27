@@ -3,8 +3,6 @@ from __future__ import annotations
 
 import pandas as pd
 
-from .config import DATASETS, SURVIVAL
-
 
 def load(df_raw: pd.DataFrame) -> pd.DataFrame:
     return df_raw.copy()
@@ -31,7 +29,6 @@ def retention_curve(df: pd.DataFrame, repeat_days: int = 30) -> tuple[pd.DataFra
     # they never repeat, so they lower the rate. Surviving-repeat count uses
     # the repeat-customer subset (joinloss would otherwise corrupt the curve).
     n_customers = df["Customer ID"].nunique()
-    n_repeat = len(joined)
     sizes = []
     for k in range(1, repeat_days + 1):
         sizes.append({"days_after_first": k,
