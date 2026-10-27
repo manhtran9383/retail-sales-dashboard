@@ -1,0 +1,12 @@
+# Enforce consistent line endings for cross-platform CI
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.csv text eol=lf
+
+# Binary files
+*.png binary
+*.xlsx binary
+*.zip binary
