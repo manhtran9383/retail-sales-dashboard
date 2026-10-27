@@ -12,6 +12,7 @@ let
         Table.SelectRows(Source, each [Name] = "fact_sales.csv")[Content]{0},
         [Delimiter=",", Columns=7, Encoding=65001]
     ),
+    #"Promoted fact headers" = Table.PromoteHeaders(factRaw, [PromoteAllScalars=true]),
     #"Fact typed" = Table.TransformColumnTypes(#"Promoted fact headers", 
         {"Invoice", type text}, {"StockCode", type text}, {"Customer ID", type text},
         {"InvoiceDate", type date}, {"Quantity", Int64.Type}, {"Price", type number},
@@ -24,6 +25,7 @@ let
         Table.SelectRows(Source, each [Name] = "dim_product.csv")[Content]{0},
         [Delimiter=",", Columns=4, Encoding=65001]
     ),
+    #"Promoted product headers" = Table.PromoteHeaders(prodRaw, [PromoteAllScalars=true]),
     #"Product typed" = Table.TransformColumnTypes(#"Promoted product headers", 
         {"StockCode", type text}, {"ProductName", type text},
         {"total_revenue", type number}, {"total_qty", Int64.Type}
@@ -35,6 +37,7 @@ let
         Table.SelectRows(Source, each [Name] = "dim_country.csv")[Content]{0},
         [Delimiter=",", Columns=3, Encoding=65001]
     ),
+    #"Promoted country headers" = Table.PromoteHeaders(ctryRaw, [PromoteAllScalars=true]),
     #"Country typed" = Table.TransformColumnTypes(#"Promoted country headers", 
         {"Country", type text}, {"CountryName", type text}, {"revenue", type number}
     }),
@@ -45,6 +48,7 @@ let
         Table.SelectRows(Source, each [Name] = "dim_date.csv")[Content]{0},
         [Delimiter=",", Columns=2, Encoding=65001]
     ),
+    #"Promoted date headers" = Table.PromoteHeaders(dateRaw, [PromoteAllScalars=true]),
     #"Date typed" = Table.TransformColumnTypes(#"Promoted date headers", 
         {"Month", type date}, {"Revenue", type number}
     }),
